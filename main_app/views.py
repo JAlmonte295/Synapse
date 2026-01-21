@@ -1,8 +1,11 @@
 from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.views import LoginView
 from main_app.models import Post
 from main_app.forms import PostForm
 from django.views.generic import CreateView
+from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm
 # from django.contrib.auth.mixins import LoginRequiredMixin
 
 class Home(LoginView):
@@ -23,3 +26,19 @@ def post_detail(request, post_id):
     post = Post.objects.get(id=post_id)
     return render(request, 'posts/detail.html', {'post': post})
 
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+class SignUp(CreateView):
+    form_class = UserCreationForm
+    template_name = 'registration/signup.html'
+    
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        user = self.object
+        login(self.request, user)
+        return response
+    
+    def get_success_url(self):
+        return '/create/'
