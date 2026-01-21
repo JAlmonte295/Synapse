@@ -44,6 +44,9 @@
                             <li class="nav-item">
                                 <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
                             </li>
+                            <li>
+                                <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
+                            </li>
                             {% endif %}
                         </ul>
                     </div>
@@ -55,7 +58,7 @@
             {% block page_content %}
             {% endblock page_content %}
         </main>
-        {% if not user.is_authenticated %}
+        {% if not user.is_authenticated and request.resolver_match.url_name == 'home' %}
         <section>
             <form action="{% url 'home' %}" method="post" class="login">
                 <h1>Login</h1>
