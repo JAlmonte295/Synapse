@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block page_content %}
+<div class="container">
+  <div class="grid grid-sidebar gap-lg">
+    <!-- Sidebar: Profile Info -->
+    <aside class="stack">
+      <div class="card text-center">
+        <!-- Avatar Placeholder -->
+        <div class="m-auto" style="width: 120px; height: 120px; background: linear-gradient(135deg, var(--color-primary-300), var(--color-accent-300)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3rem; margin-bottom: var(--space-md); color: white;">
+          &#128100;
+        </div>
+        <h2>{{ request.user.get_full_name|default:request.user.username }}</h2>
+        
+        <a href="{% url 'profile_update' %}" class="btn btn-secondary btn-sm" style="margin-bottom: var(--space-sm);">Edit Profile</a>
+
+        {% if profile.program_type %}
+          <p class="text-secondary">{{ profile.program_type }}</p>
+        {% endif %}
+        
+        {% if profile.grad_year %}
+          <p class="text-secondary">Class of {{ profile.grad_year }}</p>
+        {% endif %}
+
+        <div class="stack stack-sm" style="margin-top: var(--space-md);">
+          {% if profile.linkedin_url %}
+            <a href="{{ profile.linkedin_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm w-full">
+              LinkedIn
+            </a>
+          {% endif %}
+          {% if profile.portfolio_url %}
+            <a href="{{ profile.portfolio_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm w-full">
+              Portfolio
+            </a>
+          {% endif %}
+        </div>
+        <div class="flex justify-around" style="margin-top: var(--space-md); padding-top: var(--space-md); border-top: 1px solid var(--color-border);">
+          <div>
+            <div style="font-size: var(--font-size-xl); font-weight: bold; color: var(--color-primary-600);">{{ post_count }}</div>
+            <div style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">Posts</div>
+          </div>
+          <div class="text-center">
+            <div style="font-size: var(--font-size-xl); font-weight: bold; color: var(--color-accent-600);">{{ total_likes }}</div>
+            <div style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">Likes</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="stack">
+      <!-- About Section -->
+      <section class="card">
+        <h3>About</h3>
+        <p>{{ profile.about|default:"This user hasn't added a bio yet." }}</p>
+      </section>
+      <!-- Recent Posts -->
+      <section>
+        <h3 style="margin-bottom: var(--space-md);">Recent Posts</h3>
+        {% if user_posts %}
+          <div class="stack">
+            {% for post in user_posts %}
+              <a href="{% url 'post_detail' post.id %}" class="card post-card-link">
+                <div class="post-card">
+                  <h4 class="card-title">{{ post.title }}</h4>
+                  <p class="post-description">{{ post.description|truncatechars:120 }}</p>
+                  <div class="post-meta">
+                    <span>{{ post.created_at|date:"M d, Y" }}</span>
+                    {% if post.program_type %}
+                      <span class="post-program-badge" style="color: var(--color-primary-600); background: var(--color-primary-50);">{{ post.program_type }}</span>
+                    {% endif %}
+                  </div>
+                </div>
+              </a>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="card text-center">
+            <p>No posts yet.</p>
+            <a href="{% url 'post_create' %}" class="btn btn-primary">Create your first post</a>
+          </div>
+        {% endif %}
+      </section>
+    </div>
+  </div>
+</div>
+{% endblock %}
