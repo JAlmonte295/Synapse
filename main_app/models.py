@@ -10,6 +10,9 @@ class Profile(models.Model):
     linkedin_url = models.URLField(null=True, blank=True)
     twitter_url = models.URLField(null=True, blank=True)
     facebook_url = models.URLField(null=True, blank=True)
+    program_type = models.CharField(max_length=100, null=True, blank=True)
+    grad_year = models.IntegerField(null=True, blank=True)
+    portfolio_url = models.URLField(null=True, blank=True)
 
     def __str__(self):
         return f"Profile of {self.user.username}"
@@ -21,6 +24,8 @@ class Post(models.Model):
     grad_year = models.IntegerField(null=True, blank=True)
     linkedin_url = models.URLField(null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title

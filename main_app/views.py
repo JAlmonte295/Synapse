@@ -40,7 +40,8 @@ class PostUpdate(UpdateView):
 
 # class PostDelete(LoginRequiredMixin, DeleteView):
 class PostDelete(DeleteView):
-    pass
+    model = Post
+    success_url = reverse_lazy('post_index')
 
 # Profile view for signed-in user
 @login_required
@@ -49,15 +50,14 @@ def profile_view(request):
     profile, created = Profile.objects.get_or_create(user=user)
     user_posts = Post.objects.filter(user=user)
     post_count = user_posts.count()
+    total_likes = sum(getattr(post, 'likes', 0) for post in user_posts)
     context = {
         'profile': profile,
         'user_posts': user_posts,
         'post_count': post_count,
+        'total_likes': total_likes,
     }
     return render(request, 'profile/profile.html', context)
-    model = Post
-    template_name = 'posts/post_confirm_delete.html'
-    success_url = reverse_lazy('post_index')
 
 class SignUp(CreateView):
     form_class = UserCreationForm
