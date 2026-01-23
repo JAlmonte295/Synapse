@@ -12,6 +12,7 @@ django-cloudinary-storage = "*"
 cloudinary = "*"
 python-dotenv = "*"
 django = "*"
+pillow = "*"
 
 [dev-packages]
 djlint = "*"
